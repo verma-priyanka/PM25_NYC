@@ -1,0 +1,58 @@
+---
+title: "Advanced Raster Final Project <br> Monitoring Trends in PM2.5 in NYC"
+author: "Jordan Frey, Priyanka Verma"
+date: "4/16/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load required Libraries
+
+```{r, warning=FALSE, echo=FALSE, include=TRUE}
+library(sf)
+library(tidyverse)
+library(raster)
+library(gstat)
+library(lubridate)
+library(plyr)
+```
+
+## Data
+The Data comes from the United States Environmental Protection Agency for a 10-year period from 2010-2020. Since we are only interested in the PM2.5 measure for the winter months, we add a filter to extract dates between December and March. 
+
+```{r , warning=FALSE}
+# Reads all csv files in this directory
+data = list.files(path="data", pattern="*.csv", full.names=TRUE)
+# Merges all csv files into a single dataframe for analysis
+data_all = ldply(data, read_csv)
+# replace spaces in column names with '_'
+names(data_all) <- gsub(" ", "_", names(data_all))
+# Convert to date format for filtering
+data_all$Date <- data_all$Date %>% as.Date("%m/%d/%Y")
+# filter for winter months
+df_winter <- 
+  data_all %>% 
+  filter(strftime(data_all$Date, "%m") %in% c(12, 1:3))
+```
+
+## Spatial Conversion
+The shapefile for the New York Core-based Statitical Area (CBSA) came from the U.S. Census Bureau and consist of counties in and around the New York City urban area. Counties in upstate New York, Long Island as well as surrounding states of New Jersey are also inclued. 
+```{r, fig.align='center'}
+# read in cbsa shapefile
+nycbsa <- st_read("data/ny_cbsa.shp")
+# convert sites to an sf object
+epa_sites <- st_as_sf(df_winter, coords = c("SITE_LONGITUDE", "SITE_LATITUDE"))
+
+# plotting
+par(mar = rep(1, 4))
+# plot New York CBSA
+plot(st_geometry(nycbsa), col = "grey", main = "Location of New York Metropolitan Area Air Pollution Monitoring Sites")
+# plot epa monitoring sites 
+plot(st_geometry(epa_sites), add = TRUE, pch = 20, reset = FALSE, col = "red")
+```
+
+
+
