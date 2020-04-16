@@ -18,9 +18,7 @@ library(raster)
 library(gstat)
 library(lubridate)
 library(plyr)
-library(ggmap)
 library(tmap)
-
 ```
 
 ## Data
@@ -72,7 +70,7 @@ plot(nycbsar, axes = FALSE, box = FALSE, legend = FALSE)
 ```
 
 ## Interpolation
-This is incorrect at the moment since its plotting the whole dataset
+This is incorrect at the moment since its interpolating on the whole dataframe
 -Need to loop through years and create an interpolated surface for each-
 ```{r, warning = FALSE, message = FALSE, fig.align='center'}
 invdist <- gstat(id = "Daily_Mean_PM2.5_Concentration", 
