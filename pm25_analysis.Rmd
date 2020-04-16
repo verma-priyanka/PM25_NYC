@@ -18,23 +18,30 @@ library(raster)
 library(gstat)
 library(lubridate)
 library(plyr)
+library(ggmap)
+library(tmap)
+
 ```
 
 ## Data
 The Data comes from the United States Environmental Protection Agency for a 10-year period from 2010-2020. Since we are only interested in the PM2.5 measure for the winter months, we add a filter to extract dates between December and March. 
 
-```{r , warning=FALSE}
+```{r ,warning = FALSE, message = FALSE}
 # Reads all csv files in this directory
 data = list.files(path="data", pattern="*.csv", full.names=TRUE)
 # Merges all csv files into a single dataframe for analysis
 data_all = ldply(data, read_csv)
 # replace spaces in column names with '_'
 names(data_all) <- gsub(" ", "_", names(data_all))
+# rename latitude & longitude columns
+names(data_all)[names(data_all) == "SITE_LONGITUDE"] <- "x"
+names(data_all)[names(data_all) == "SITE_LATITUDE"] <- "y"
 # Convert to date format for filtering
 data_all$Date <- data_all$Date %>% as.Date("%m/%d/%Y")
+# extract year from Date as a new column for yearly interpolation
+data_all[, "year"] <- format(data_all[,"Date"], "%Y")
 # filter for winter months
-df_winter <- 
-  data_all %>% 
+df_winter <- data_all %>% 
   filter(strftime(data_all$Date, "%m") %in% c(12, 1:3))
 ```
 
@@ -43,8 +50,9 @@ The shapefile for the New York Core-based Statitical Area (CBSA) came from the U
 ```{r, fig.align='center'}
 # read in cbsa shapefile
 nycbsa <- st_read("data/ny_cbsa.shp")
-# convert sites to an sf object
-epa_sites <- st_as_sf(df_winter, coords = c("SITE_LONGITUDE", "SITE_LATITUDE"))
+
+# convert sites to an sf object using projection from cbsa
+epa_sites <- st_as_sf(df_winter, coords = c("x", "y"), crs = st_crs(nycbsa))
 
 # plotting
 par(mar = rep(1, 4))
@@ -54,5 +62,34 @@ plot(st_geometry(nycbsa), col = "grey", main = "Location of New York Metropolita
 plot(st_geometry(epa_sites), add = TRUE, pch = 20, reset = FALSE, col = "red")
 ```
 
+## Rasterize
+```{r, fig.align='center', fig.height=4, fig.width=4}
+target <- raster(x = extent(nycbsa), crs = crs(nycbsa), res = 0.1)
+values(target) <- 1:ncell(target)
+nycbsar <- nycbsa %>% rasterize(x = ., y = target, field = "GEOID")
+par(mar = c(0, 0, 0, 4))
+plot(nycbsar, axes = FALSE, box = FALSE, legend = FALSE)
+```
+
+## Interpolation
+This is incorrect at the moment since its plotting the whole dataset
+-Need to loop through years and create an interpolated surface for each-
+```{r, warning = FALSE, message = FALSE, fig.align='center'}
+invdist <- gstat(id = "Daily_Mean_PM2.5_Concentration", 
+                 formula = Daily_Mean_PM2.5_Concentration ~ 1, 
+                 locations = ~x + y, 
+                 data = df_winter)
+invdistr <- interpolate(object = nycbsar, model = invdist)
+invdistrmsk <- mask(x = invdistr, mask = nycbsa)
+```
+
+# Plotting Interpolated Layer 
+overlay raster layer on interactive baemap using tmap package
+```{r, warning = FALSE, message = FALSE, fig.align='center'}
+tmap_mode("view")
+tm_shape(invdistrmsk) + 
+  tm_raster(palette = "magma", breaks = seq(8, 12, 0.5)) +
+  tm_layout(bg.color = "grey", inner.margins = 0.2)
+```
 
 
