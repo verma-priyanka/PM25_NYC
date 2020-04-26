@@ -96,12 +96,13 @@ df_winter$winter <- ifelse(format(df_winter$Date, "%m") == "12",
 years <- unique(df_winter$winter)
 
 # Interpolate for each winter season
-# int_df.list: List of dataframes for each winter with monthly mean PM2.5
+# Calculate mean for every site for each winter season
+# int_df.list: List of dataframes with mean PM2.5 for each winter
 # invdist.list List of interpolated surfaces for each winter
 int_df.list =list()
 invdist.list = list()
 for (each_year in years){
-  # calculate mean for every month for a winter season
+  # calculate mean for every site for each winter season
   int_df <- df_winter %>% 
   filter(winter == each_year) %>% 
   group_by(Site_ID, winter, x, y) %>%
@@ -140,9 +141,9 @@ levelplot(s, pretty = TRUE,  main="NY Metropolitan Area PM2.5 Mean",
 
 
 ```{r}
+# # Interactive map for interpolated layers
 # # The legend is currently messed up
-# # change plot to view below for interactive plots
-# # plot interpolated layers
+
 # tmap_mode("view")
 # tm_shape(s) +
 #   tm_raster(palette = "-magma", alpha = 0.5)+
