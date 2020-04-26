@@ -1,17 +1,20 @@
 ---
 title: "Advanced Raster Final Project <br> Monitoring Trends in PM2.5 in NYC"
 author: "Jordan Frey, Priyanka Verma"
-date: "4/16/2020"
-output: html_document
+date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+  theme: architect
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Load required Libraries
-
-```{r, warning=FALSE, echo=FALSE, include=TRUE}
+## Libraries
+```{r, warning=FALSE, include=TRUE, message=FALSE}
 library(sf)
 library(tidyverse)
 library(raster)
@@ -19,6 +22,8 @@ library(gstat)
 library(lubridate)
 library(plyr)
 library(tmap)
+library(rasterVis)
+library(RColorBrewer)
 ```
 
 ## Data
@@ -40,54 +45,109 @@ data_all$Date <- data_all$Date %>% as.Date("%m/%d/%Y")
 data_all[, "year"] <- format(data_all[,"Date"], "%Y")
 # filter for winter months
 df_winter <- data_all %>% 
-  filter(strftime(data_all$Date, "%m") %in% c(12, 1:3))
+  filter(strftime(data_all$Date, "%m") %in% c('12','01','02','03'))
 ```
 
 ## Spatial Conversion
-The shapefile for the New York Core-based Statitical Area (CBSA) came from the U.S. Census Bureau and consist of counties in and around the New York City urban area. Counties in upstate New York, Long Island as well as surrounding states of New Jersey are also inclued. 
+The shapefile for the New York Core-based Statitical Area (CBSA) came from the U.S. Census Bureau and consist of counties in and around the New York City urban area. Counties in upstate New York, Long Island as well as surrounding states of New Jersey are also included. 
 ```{r, fig.align='center'}
 # read in cbsa shapefile
 nycbsa <- st_read("data/ny_cbsa.shp")
 
 # convert sites to an sf object using projection from cbsa
-epa_sites <- st_as_sf(df_winter, coords = c("x", "y"), crs = st_crs(nycbsa))
+epa_sites <- df_winter %>% 
+  distinct(Site_ID, x, y) %>% 
+  st_as_sf(coords = c("x", "y"), crs = st_crs(nycbsa))
+```
 
-# plotting
-par(mar = rep(1, 4))
-# plot New York CBSA
-plot(st_geometry(nycbsa), col = "grey", main = "Location of New York Metropolitan Area Air Pollution Monitoring Sites")
-# plot epa monitoring sites 
-plot(st_geometry(epa_sites), add = TRUE, pch = 20, reset = FALSE, col = "red")
+## Explore Metropolitan Area & Air Pollution Monitoring Sites
+The monitoring site that falls outside the metro area boundary and will be removed from the analysis
+```{r, warning = FALSE, message = FALSE, fig.align='center'}
+tmap_mode("view")
+
+tm_shape(nycbsa, name = "NY Metropolitan Area", is.master = TRUE) + 
+  tm_borders(col= "coral") +
+  tm_layout(title = "New York Metro Area Air Pollution Monitoring Sites") +
+  tm_shape(epa_sites, name = "EPA Air Monitoring Sites") +
+  tm_dots(col="red")
 ```
 
 ## Rasterize
+Rasterize the nycbsa shapefile for interpolation surface
 ```{r, fig.align='center', fig.height=4, fig.width=4}
-target <- raster(x = extent(nycbsa), crs = crs(nycbsa), res = 0.1)
-values(target) <- 1:ncell(target)
+# create a raster file with resolution of 0.01 for ny metro area
+target <- raster(x = extent(nycbsa), crs = crs(nycbsa), res = 0.01)
+# assign value of 1 to each pixel
+values(target) <- 1
+# crop raster surface to NY metro region
 nycbsar <- nycbsa %>% rasterize(x = ., y = target, field = "GEOID")
-par(mar = c(0, 0, 0, 4))
+# plot for visual check
+par(mar = c(1, 0, 0, 4))
 plot(nycbsar, axes = FALSE, box = FALSE, legend = FALSE)
 ```
 
 ## Interpolation
-This is incorrect at the moment since its interpolating on the whole dataframe
--Need to loop through years and create an interpolated surface for each-
-```{r, warning = FALSE, message = FALSE, fig.align='center'}
-invdist <- gstat(id = "Daily_Mean_PM2.5_Concentration", 
-                 formula = Daily_Mean_PM2.5_Concentration ~ 1, 
-                 locations = ~x + y, 
-                 data = df_winter)
-invdistr <- interpolate(object = nycbsar, model = invdist)
-invdistrmsk <- mask(x = invdistr, mask = nycbsa)
+```{r, warning = FALSE, message = FALSE}
+# assign year to winter months
+# if jan-march, assign to previous year, else assign same year
+df_winter$winter <- ifelse(format(df_winter$Date, "%m") == "12",
+                           df_winter$year,as.numeric(df_winter$year)-1)
+# create a list of all winter years
+years <- unique(df_winter$winter)
+
+# Interpolate for each winter season
+# int_df.list: List of dataframes for each winter with monthly mean PM2.5
+# invdist.list List of interpolated surfaces for each winter
+int_df.list =list()
+invdist.list = list()
+for (each_year in years){
+  # calculate mean for every month for a winter season
+  int_df <- df_winter %>% 
+  filter(winter == each_year) %>% 
+  group_by(Site_ID, winter, x, y) %>%
+  summarise_at(vars(Daily_Mean_PM2.5_Concentration),              
+               list(PM_Mean = mean))
+  # add dataframe to list
+  int_df.list[[each_year]] = int_df
+  
+  # inverse distance interpolation for each year
+  # create a gstat object
+  invdist <- gstat(id = "PM_Mean",
+                   formula = PM_Mean ~ 1,
+                   locations = ~x + y,
+                   data = int_df)
+  # generate interpolated layer
+  invdistr <- interpolate(object = nycbsar, model = invdist)
+  # mask to metro area
+  invdistrmsk <- mask(x = invdistr, mask = nycbsa)
+  # add interpolated layer to list
+  invdist.list[[each_year]] = invdistrmsk
+}
 ```
 
 # Plotting Interpolated Layer 
-overlay raster layer on interactive baemap using tmap package
 ```{r, warning = FALSE, message = FALSE, fig.align='center'}
-tmap_mode("view")
-tm_shape(invdistrmsk) + 
-  tm_raster(palette = "magma", breaks = seq(8, 12, 0.5)) +
-  tm_layout(bg.color = "grey", inner.margins = 0.2)
+# create a stack for all interpolated layers for plotting
+s <- stack(invdist.list)
+# edit name for each layer
+names(s) <-  gsub(x = names(s), pattern = "X", replacement = "Winter")
+# set up theme for plot
+mapTheme <- rasterTheme(region=brewer.pal(8,"Blues"), rev=TRUE)
+# plot interpolated layers
+levelplot(s, pretty = TRUE,  main="NY Metropolitan Area PM2.5 Mean",
+          scales =list(tck = c(1,0)), par.settings=mapTheme)
 ```
 
+
+```{r}
+# # The legend is currently messed up
+# # change plot to view below for interactive plots
+# # plot interpolated layers
+# tmap_mode("view")
+# tm_shape(s) +
+#   tm_raster(palette = "-magma", alpha = 0.5)+
+#   tm_facets(as.layers = TRUE) +
+#   tm_layout(title = "NY Metropolitan Area PM2.5 Mean", 
+#             legend.outside.position = "left", legend.outside = TRUE)
+```
 
