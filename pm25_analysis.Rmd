@@ -24,6 +24,8 @@ library(plyr)
 library(tmap)
 library(rasterVis)
 library(RColorBrewer)
+library(reshape)
+library(Kendall)
 ```
 
 ## Data
@@ -106,7 +108,7 @@ for (each_year in years){
   int_df <- df_winter %>% 
   filter(winter == each_year) %>% 
   group_by(Site_ID, winter, x, y) %>%
-  summarise_at(vars(Daily_Mean_PM2.5_Concentration),              
+  summarise_at(vars(Daily_Mean_PM2.5_Concentration),
                list(PM_Mean = mean))
   # add dataframe to list
   int_df.list[[each_year]] = int_df
@@ -129,14 +131,13 @@ for (each_year in years){
 # Plotting Interpolated Layer 
 ```{r, warning = FALSE, message = FALSE, fig.align='center'}
 # create a stack for all interpolated layers for plotting
-s <- stack(invdist.list)
+s <- raster::stack(invdist.list)
 # edit name for each layer
 names(s) <-  gsub(x = names(s), pattern = "X", replacement = "Winter")
 # set up theme for plot
 mapTheme <- rasterTheme(region=brewer.pal(8,"Blues"), rev=TRUE)
 # plot interpolated layers
-levelplot(s, pretty = TRUE,  main="NY Metropolitan Area PM2.5 Mean",
-          scales =list(tck = c(1,0)), par.settings=mapTheme)
+levelplot(s, pretty = TRUE,  main="NY Metropolitan Area PM2.5 Mean", par.settings=mapTheme)
 ```
 
 
@@ -150,5 +151,39 @@ levelplot(s, pretty = TRUE,  main="NY Metropolitan Area PM2.5 Mean",
 #   tm_facets(as.layers = TRUE) +
 #   tm_layout(title = "NY Metropolitan Area PM2.5 Mean", 
 #             legend.outside.position = "left", legend.outside = TRUE)
+```
+
+# Histogram
+```{r, fig.align='center'}
+# raster stack to df for each x, y
+# remove NA values
+stack_df <- as.data.frame(s, xy = TRUE, na.rm = TRUE)%>%
+  melt(id.vars = c('x','y'))
+
+# histogram for interpolated layers
+par(mfrow=c(4,2))
+ggplot(stack_df) +
+  geom_histogram(aes(value), binwidth = .5) +
+    facet_wrap(~variable)
+```
+
+# Mann-Kendall Trend Test
+```{r, warning = FALSE, message = FALSE, results = "hide"}
+# function for Mann-Kendall trend test
+kendall=function(x){return(unlist(MannKendall(x)))}
+# apply function to raster stack
+kendall_output=calc(s,kendall)
+```
+
+# Kendall's tau & p-value 
+```{r, fig.align='center'}
+# plot Kendall's tau statistic
+plot(kendall_output$tau, main = "Kendall's tau statistic")
+# plot p-value
+plot(kendall_output$sl, main = "p-value")
+
+# write to geotiffs
+writeRaster(kendall_output$tau, filename = "tau.tif", format="GTiff", overwrite=TRUE)
+writeRaster(kendall_output$sl, filename ="p-value.tif", format="GTiff", overwrite=TRUE)
 ```
 
