@@ -13,11 +13,19 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-##Introduction
-For our final project, we have decided to analyze air pollution trends in the New York Metropolitan Area. Specifically, we have decided to focus on particulate matter 2.5 (PM2.5) due to its pervasiveness and widespread impact on the respiratory health of residents. Our data has been provided by the Environmental Protection Agency (EPA).
+# R Tutorial: Geospatial Time Series Analysis
+
+
+## Introduction
+For a long period of time, the ability for individuals and organizations to analyze geospatial data was limited to those who could afford expensive software (such as TerrSet, ERDAS, ENVI, or ArcGIS). R has emerged as an alternative to these expensive software packages. R is an open source statistical programming language that enables users to create reproducible, easy to understand, and efficient workflows. Additionally, its widespread use has inspired many individuals (most of whom are researchers and data scientists) to create packages that expand the capabilities of the language. The focus of this project is to highlight the abilities of the R programming language to perform data cleaning tasks and analysis tasks on geospatial data- all made possible through these packages. Specifically, the focus will be on the data cleaning, interpolation, and analysis of time-series data.
+
+This tutorial looks at particulate matter air pollutant trends in the New York Metropolitan Area. Specifically, the focus is on particulate matter that is less than 2.5 micrometers (PM2.5). This data has been provided by the Environmental Protection Agency (EPA), and can be found through the open data portal: https://www.epa.gov/outdoor-air-quality-data/download-daily-data
+
 
 
 ## Libraries
+
+To begin the analysis, first load the packages we will be using for this project. Please type in `install.packages("PACKAGE_NAME_HERE")` for each package you do not already have locally installed (all those used are listed below). Then, run the code chunk below:
 ```{r warning=FALSE, include=TRUE, message=FALSE}
 library(sf)
 library(tidyverse)
@@ -35,7 +43,7 @@ library(imager)
 ```
 
 ## Data
-The Data comes from the United States Environmental Protection Agency for a 10-year period from 2010-2020. Since we are only interested in the PM2.5 measure for the winter months, we add a filter to extract dates between December and March. 
+The data used in this analysis spans a 10-year period from 2010-2020. Since we are only interested in the PM2.5 measure for the winter months, we add a filter to extract dates between December and March.
 
 ```{r warning = FALSE, message = FALSE}
 # Reads all csv files in this directory
