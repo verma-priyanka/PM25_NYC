@@ -1,0 +1,16 @@
+Version     : IDRISI Time Series A.2
+Title       : PM2.5_NYC
+Units       : 
+CharsB4Date : 0
+Series N    : 11
+Series Type : image
+Start Date  : 12/01/2009
+Start Time  : 00/00/00
+End Date    : 12/31/2019
+End Time    : 23/59/59
+Interval    : annual
+Cyclelength : 1
+Cycles/Year : 1
+Start Posn  : 1
+DoY   1     : 182.5
+Caption   1 : Year

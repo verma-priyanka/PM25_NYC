@@ -1,0 +1,39 @@
+ETM Version : 1
+ETM Release : 4
+ProjectName : pm25terr
+Use Overlay : false
+VCT Overlay : 
+Line Color  : 0
+Thinning fac: 0
+N_Series    : 1
+
+Series Name : idw_ts
+
+    Series Num. : 1
+    Mask Name   : 
+    Palette     : 
+    Title       : PM2.5_NYC
+    Units       : 
+    SeriesLength: 11
+    Series Type : Image
+    InitialDate : 12/01/2009
+    InitialTime : 00/00/00
+    Final Date  : 12/31/2019
+    Final Time  : 23/59/59
+    IntervalType: Annual
+
+    N_Analyses  : 4
+
+        AnalysisType: MK_SIGNIFICANCE_P
+        OutputPrefix: idw_ts
+
+        AnalysisType: MK_SIGNIFICANCE_Z
+        OutputPrefix: idw_ts
+
+        AnalysisType: MK_TAU
+        OutputPrefix: idw_ts
+
+        AnalysisType: TS_SLOPE
+        OutputPrefix: idw_ts
+
+    N_LinModels : 0

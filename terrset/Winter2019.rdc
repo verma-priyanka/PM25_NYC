@@ -1,0 +1,26 @@
+file format : Idrisi Raster A.1
+file title  : 
+data type   : real
+file type   : binary
+columns     : 358
+rows        : 213
+ref. system : plane
+ref. units  : deg
+unit dist.  : 1
+min. X      : -75.3591840
+max. X      : -71.7791840
+min. Y      : 39.4718740
+max. Y      : 41.6018740
+pos'n error : unspecified
+resolution  : 0.01
+min. value  : 5.6455226
+max. value  : 9.7519913
+display min : 5.6455226
+display max : 9.7519913
+value units : unspecified
+value error : unspecified
+flag value  : -3.4e+038
+flag def'n  : missing data
+legend cats : 0
+lineage     : 
+comment     : 

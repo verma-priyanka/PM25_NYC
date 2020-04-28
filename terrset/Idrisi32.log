@@ -1,0 +1,23 @@
+Log file started on 4/27/2020 at 10:00:39 PM
+------------------------------------------
+
+Reference system for 'Winter2009' and 'Winter2010' images in TSF file is not the same.
+Reference system for 'Winter2009' and 'Winter2010' images in TSF file is not the same.
+KENDALL  1*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idw_ts.tsf*Y*N*N*N*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idw_ts\trend\idw_timeseries_MK_trend*1*none
+INITIAL  E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idr_idrtmpmask_kendall.rst*3*1*1*1*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\Winter2009.rst*m
+CONVERT  1*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idr_idrtmpmask_kendall.rst*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idr_idrtmpmask_kendall.rst*3*2*2
+DISPLAY image file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idw_ts\trend\idw_timeseries_MK_trend_MK_Tau.rst with symbol file quant.  Autoscale, Title, Legend.
+KENDALL  1*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idw_ts.tsf*N*N*Y*N*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idw_ts\trend\idw_timeseries*1*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\nycbsar_mask.rst
+CONVERT  1*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\nycbsar_mask.rst*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idr_idrtmpmask_kendall.rst*3*2*2
+Convert  Error -999
+Unexpected error condition encountered.  Please check the integrity of the operation performed, the data files used, and the amount of disk space available.
+DISPLAY image file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\Winter2019.rst with symbol file C:\Program Files (x86)\TerrSet\Symbols\quant.smp.  Autoscale, Title, Legend.
+DISPLAY image file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\nycbsar_mask.rst with symbol file C:\Program Files (x86)\TerrSet\Symbols\quant.smp.  Autoscale, Title, Legend.
+DISPLAY image file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idw_ts\trend\idw_ts_MK_tau.rst with symbol file C:\Program Files (x86)\TerrSet\Symbols\quant.smp.  Autoscale, Title, Legend.
+DISPLAY image file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idw_ts\trend\idw_ts_MK_P.rst with symbol file C:\Program Files (x86)\TerrSet\Symbols\quant.smp.  Autoscale, Title, Legend.
+Mask file not found
+KENDALL  1*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idw_ts.tsf*N*Y*N*N*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idw_ts\trend\idw_timeseries_theilsen*1*none
+INITIAL  E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idr_idrtmpmask_kendall.rst*3*1*1*1*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\Winter2009.rst*m
+CONVERT  1*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idr_idrtmpmask_kendall.rst*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idr_idrtmpmask_kendall.rst*3*2*2
+DISPLAY image file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idw_ts\trend\idw_timeseries_theilsen_TS_Slope.rst with symbol file quant.  Autoscale, Title, Legend.
+DISPLAY image file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idw_ts\trend\idw_timeseries_theilsen_TS_slope.rst with symbol file C:\Program Files (x86)\TerrSet\Symbols\quant.smp.  Autoscale, Title, Legend.

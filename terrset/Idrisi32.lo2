@@ -1,0 +1,61 @@
+Would like to add the TSF file (idw_ts) to the current session?
+Output file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idw_ts.tsf already exists. Overwrite?
+Reference system for 'Winter2009' and 'Winter2010' images in TSF file is not the same.
+Reference system for 'Winter2009' and 'Winter2010' images in TSF file is not the same.
+Reference system for 'Winter2009' and 'Winter2010' images in TSF file is not the same.
+  (Output REF file) not found.
+KENDALL  1*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idw_ts.tsf*N*N*Y*N*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idw_ts\trend\idw_ts*1*none
+INITIAL  E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idr_idrtmpmask_kendall.rst*3*1*1*1*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\Winter2009.rst*m
+CONVERT  1*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idr_idrtmpmask_kendall.rst*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idr_idrtmpmask_kendall.rst*3*2*2
+DISPLAY image file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idw_ts\trend\idw_ts_MK_Z.rst with symbol file quant.  Autoscale, Title, Legend.
+GEOTIFF  1*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\p-value.tif*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\p-value.rst
+GEOTIFF  1*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\tau.tif*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\tau.rst
+Gdal called with command line:
+Gdal called with command line:
+gdal_translate  "E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\p-value.tif" "E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\p-value.rst" -of RST
+gdal_translate  "E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\tau.tif" "E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\tau.rst" -of RST
+GEOTIFF  1*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\p-value.tif*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\p-value.rst
+GEOTIFF  1*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\tau.tif*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\tau.rst
+Gdal called with command line:
+gdal_translate  "E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\p-value.tif" "E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\p-value.rst" -of RST
+Gdal called with command line:
+gdal_translate  "E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\tau.tif" "E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\tau.rst" -of RST
+DISPLAY image file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idw_ts\trend\idw_ts_MK_Z.rst with symbol file C:\Program Files (x86)\TerrSet\Symbols\quant.smp.  Autoscale, Title, Legend.
+DISPLAY image file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idw_ts\trend\idw_ts_MK_P.rst with symbol file C:\Program Files (x86)\TerrSet\Symbols\quant.smp.  Autoscale, Title, Legend.
+DISPLAY image file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\tau.rst with symbol file C:\Program Files (x86)\TerrSet\Symbols\quant.smp.  Autoscale, Title, Legend.
+DISPLAY image file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\p-value.rst with symbol file C:\Program Files (x86)\TerrSet\Symbols\quant.smp.  Autoscale, Title, Legend.
+DISPLAY image file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\tau.rst with symbol file C:\Program Files (x86)\TerrSet\Symbols\quant.smp.  Autoscale, Title, Legend.
+DISPLAY image file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idw_ts\trend\idw_ts_MK_P.rst with symbol file C:\Program Files (x86)\TerrSet\Symbols\quant.smp.  Autoscale, Title, Legend.
+DISPLAY image file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idw_ts\trend\idw_ts_MK_Z.rst with symbol file C:\Program Files (x86)\TerrSet\Symbols\quant.smp.  Autoscale, Title, Legend.
+KENDALL  1*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idw_ts.tsf*Y*N*N*N*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idw_ts\trend\idw_ts*1*none
+INITIAL  E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idr_idrtmpmask_kendall.rst*3*1*1*1*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\Winter2009.rst*m
+CONVERT  1*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idr_idrtmpmask_kendall.rst*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idr_idrtmpmask_kendall.rst*3*2*2
+DISPLAY image file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idw_ts\trend\idw_ts_MK_Tau.rst with symbol file quant.  Autoscale, Title, Legend.
+KENDALL  1*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idw_ts.tsf*N*Y*N*N*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idw_ts\trend\idw_ts*1*none
+INITIAL  E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idr_idrtmpmask_kendall.rst*3*1*1*1*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\Winter2009.rst*m
+CONVERT  1*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idr_idrtmpmask_kendall.rst*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idr_idrtmpmask_kendall.rst*3*2*2
+DISPLAY image file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idw_ts\trend\idw_ts_TS_Slope.rst with symbol file quant.  Autoscale, Title, Legend.
+DISPLAY image file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\theilsen_pval.rst with symbol file C:\Program Files (x86)\TerrSet\Symbols\quant.smp.  Autoscale, Title, Legend.
+DISPLAY image file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idw_ts\trend\idw_ts_TS_intercept.rst with symbol file C:\Program Files (x86)\TerrSet\Symbols\quant.smp.  Autoscale, Title, Legend.
+GEOTIFF  1*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\theilsen_slope.tif*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\theilsen_slope.rst
+Gdal called with command line:
+gdal_translate  "E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\theilsen_slope.tif" "E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\theilsen_slope.rst" -of RST
+DISPLAY image file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\theilsen_slope.rst with symbol file greyscale.  Title, Legend.
+DISPLAY image file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\theilsen_slope.rst with symbol file C:\Program Files (x86)\TerrSet\Symbols\quant.smp.  Autoscale, Title, Legend.
+DISPLAY image file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\theilsen_slope.rst with symbol file C:\Program Files (x86)\TerrSet\Symbols\quant.smp.  Autoscale, Title, Legend.
+DISPLAY image file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\theilsen_slope.rst with symbol file C:\Program Files (x86)\TerrSet\Symbols\quant.smp.  Autoscale, Title, Legend.
+DISPLAY image file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\theilsen_slope.rst with symbol file C:\Program Files (x86)\TerrSet\Symbols\quant.smp.  Autoscale, Title, Legend.
+DISPLAY image file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\theilsen_slope.rst with symbol file C:\Program Files (x86)\TerrSet\Symbols\quant.smp.  Autoscale, Title, Legend.
+DISPLAY image file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\theilsen_slope.rst with symbol file C:\Program Files (x86)\TerrSet\Symbols\quant.smp.  Autoscale, Title, Legend.
+DISPLAY image file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\theilsen_slope.rst with symbol file C:\Program Files (x86)\TerrSet\Symbols\quant.smp.  Autoscale, Title, Legend.
+DISPLAY image file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\theilsen_slope.rst with symbol file C:\Program Files (x86)\TerrSet\Symbols\quant.smp.  Autoscale, Title, Legend.
+DISPLAY image file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\theilsen_slope.rst with symbol file C:\Program Files (x86)\TerrSet\Symbols\quant.smp.  Autoscale, Title, Legend.
+DISPLAY image file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\theilsen_slope.rst with symbol file C:\Program Files (x86)\TerrSet\Symbols\quant.smp.  Autoscale, Title, Legend.
+DISPLAY image file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\theilsen_slope.rst with symbol file C:\Program Files (x86)\TerrSet\Symbols\quant.smp.  Autoscale, Title, Legend.
+DISPLAY image file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\theilsen_slope.rst with symbol file C:\Program Files (x86)\TerrSet\Symbols\quant.smp.  Autoscale, Title, Legend.
+DISPLAY image file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\theilsen_slope.rst with symbol file C:\Program Files (x86)\TerrSet\Symbols\quant.smp.  Autoscale, Title, Legend.
+DISPLAY image file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\theilsen_slope.rst with symbol file C:\Program Files (x86)\TerrSet\Symbols\quant.smp.  Autoscale, Title, Legend.
+DISPLAY image file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\theilsen_slope.rst with symbol file C:\Program Files (x86)\TerrSet\Symbols\quant.smp.  Autoscale, Title, Legend.
+DISPLAY image file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\theilsen_slope.rst with symbol file C:\Program Files (x86)\TerrSet\Symbols\quant.smp.  Autoscale, Title, Legend.
+DISPLAY image file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\theilsen_slope.rst with symbol file C:\Program Files (x86)\TerrSet\Symbols\quant.smp.  Autoscale, Title, Legend.
+DISPLAY image file E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\theilsen_slope.rst with symbol file C:\Program Files (x86)\TerrSet\Symbols\quant.smp.  Autoscale, Title, Legend.

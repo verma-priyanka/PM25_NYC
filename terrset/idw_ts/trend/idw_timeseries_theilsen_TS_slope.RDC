@@ -1,0 +1,26 @@
+file format : IDRISI Raster A.1
+file title  : Median trend (Theil-Sen) of idw_ts
+data type   : real
+file type   : binary
+columns     : 358
+rows        : 213
+ref. system : plane
+ref. units  : deg
+unit dist.  : 1.0000000
+min. X      : -75.3591840
+max. X      : -71.7791840
+min. Y      : 39.4718740
+max. Y      : 41.6018740
+pos'n error : unknown
+resolution  : unknown
+min. value  : -0.6075133
+max. value  : 0.1738247
+display min : -0.6075133
+display max : 0.1738247
+value units : unspecified
+value error : unknown
+flag value  : none
+flag def'n  : none
+legend cats : 0
+lineage     : This file was created by the KENDALL module with the command line: 
+lineage     : 1*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idw_ts.tsf*N*Y*N*N*E:\OneDrive\Documents\School_Work\Clark\advanced_raster\PM25_NYC\PM25_NYC\terrset\idw_ts\trend\idw_timeseries_theilsen*1*none
