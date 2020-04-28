@@ -111,7 +111,7 @@ plot(nycbsar, axes = FALSE, box = FALSE, legend = FALSE)
 
 ## Interpolation
 Perform a few more preprocessing steps to ready the dataset for analysis, and then use the `gstat` function to perform an inverse distance weighting (IDW) interpolation.
-```{r warning = FALSE, message = FALSE, echo=FALSE}
+```{r message=FALSE, warning=FALSE, include=FALSE}
 # assign year to winter months
 # if jan-march, assign to previous year, else assign same year
 df_winter$winter <- ifelse(format(df_winter$Date, "%m") == "12",
@@ -209,9 +209,9 @@ kendall_output = calc(s,kendall)
 
 ```{r fig.align='center'}
 # plot Kendall's tau statistic
-plot(kendall_output$tau, main = "Kendall's tau statistic")
+levelplot(kendall_output$tau, main = "Kendall's tau statistic")
 # plot p-value
-plot(kendall_output$sl, main = "p-value")
+levelplot(kendall_output$sl, main = "p-value")
 
 # write to rst
 writeRaster(kendall_output$tau, filename = "tau.rst", overwrite=TRUE)
@@ -248,6 +248,7 @@ file.rename(from = "slope.tif", to = "theilsen_slope.tif")
 
 ```{r fig.align = 'center'}
 theilsen_slope <- raster("theilsen_slope.tif")
+levelplot(theilsen_slope)
 
 # write slope image to IDRISI raster format for easy comparison
 writeRaster(theilsen_slope, filename = "theilsen_slope.rst", overwrite=T)
