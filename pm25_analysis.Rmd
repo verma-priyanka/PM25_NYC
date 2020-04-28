@@ -17,33 +17,40 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 ## Introduction
-For a long period of time, the ability for individuals and organizations to analyze geospatial data was limited to those who could afford expensive software (such as TerrSet, ERDAS, ENVI, or ArcGIS). R has emerged as an alternative to these expensive software packages. R is an open source statistical programming language that enables users to create reproducible, easy to understand, and efficient workflows. Additionally, its widespread use has inspired many individuals (most of whom are researchers and data scientists) to create packages that expand the capabilities of the language. The focus of this project is to highlight the abilities of the R programming language to perform data cleaning tasks and analysis tasks on geospatial data- all made possible through these packages. Specifically, the focus will be on the data cleaning, interpolation, and analysis of time-series data.
+For a long period of time, the ability for individuals and organizations to analyze geospatial data was limited to those who could afford expensive software (such as TerrSet, ERDAS, ENVI, or ArcGIS). R has emerged as an alternative to these expensive software packages. R is an open source statistical programming language that enables users to create reproducible, easy to understand, and efficient workflows. Its widespread use has inspired many individuals (many, if not most of whom are researchers and data scientists) to create packages that expand the capabilities of the language- including in GIS and raster image analysis. This project highlights some of the abilities of the R programming language to work with geospatial data- all made possible through these packages. Specifically, the focus will be on the data cleaning, interpolation, and advanced analysis of time-series data.
 
-This tutorial looks at particulate matter air pollutant trends in the New York Metropolitan Area. Specifically, the focus is on particulate matter that is less than 2.5 micrometers (PM2.5). This data has been provided by the Environmental Protection Agency (EPA), and can be found through the open data portal: https://www.epa.gov/outdoor-air-quality-data/download-daily-data
+## Objectives
+This tutorial seeks to gain insights from particulate matter air pollutant trends in the New York Metropolitan Area. Specifically, we look at particulate matter that is less than 2.5 micrometers (PM2.5), and only data obtained during winter months, due to the higher level of PM2.5 during that season.
 
+## Study Area
+Our study area includes part of the New-York Metropolitan Area, including New York City, Long Island, counties in Upstate New York, and large portions of New Jersey. These areas were determined by the New York Core Based Statistical Area (NY CBSA).
 
+## Data
+PM2.5 data has been provided by the Environmental Protection Agency (EPA), and can be found through the open data portal: https://www.epa.gov/outdoor-air-quality-data/download-daily-data.
+
+The CBSA boundary shapefile can be obtained from the United States Census Bureau.
 
 ## Libraries
 
-To begin the analysis, first load the packages we will be using for this project. Please type in `install.packages("PACKAGE_NAME_HERE")` for each package you do not already have locally installed (all those used are listed below). Then, run the code chunk below:
+To begin the analysis, first load the packages we will be using for this project. Please type in `install.packages("PACKAGE_NAME_HERE")` for each package you do not already have locally installed (all those used in this project are listed below). Then, run the code chunk below:
 ```{r warning=FALSE, include=TRUE, message=FALSE}
-library(sf)
-library(tidyverse)
-library(raster)
-library(gstat)
-library(lubridate)
-library(plyr)
-library(tmap)
-library(rasterVis)
-library(RColorBrewer)
-library(reshape)
-library(Kendall)
-library(EcoGenetics)
-library(imager)
+library(sf) # sf (simple features) offers an exceptional data structure for storing GIS vector data
+library(tidyverse) # The tidyverse is a compilation of packages curated to make data cleaning easy
+library(raster) # provides a data structure for storing raster data and provides preprocessing functions
+library(gstat) # package for interpolating data
+library(lubridate) # provides extra functionality for working with dates and times in data
+library(plyr) # provides extra data cleaning functions
+library(tmap) # provides interactive visualization functionality for geospatial data
+library(rasterVis) # provides enhanced plotting functions for raster data
+library(RColorBrewer) # provides enhanced and customized palettes for visualizing data
+library(reshape) # provides extra functionality for data cleaning
+library(Kendall) # provides acccess to Mann-Kendall modeling
+library(EcoGenetics) # provides access to Theil-Sen modeling
+library(imager) # allows for easy plotting of non-spatial image files, like .BMP or .PNG
 ```
 
-## Data
-The data used in this analysis spans a 10-year period from 2010-2020. Since we are only interested in the PM2.5 measure for the winter months, we add a filter to extract dates between December and March.
+## Data Pre-processing
+The raw data used in this analysis spans a 10-year period, from January 1st, 2010 to April 12th, 2020. Air quality data was sampled at each location at least once every few days, making it a near-daily data set. To focus on the yearly winter season, the data was filtered based on the December - March months. The mean PM2.5 value was obtained for each time index (season). Users of this tutorial are encouraged to test view the output of each intermediate step to better understand how the workflow operates
 
 ```{r warning = FALSE, message = FALSE}
 # Reads all csv files in this directory
@@ -65,7 +72,7 @@ df_winter <- data_all %>%
 ```
 
 ## Spatial Conversion
-The shapefile for the New York Core-based Statitical Area (CBSA) came from the U.S. Census Bureau and consist of counties in and around the New York City urban area. Counties in upstate New York, Long Island as well as surrounding states of New Jersey are also included. 
+The shapefile for the CBSA is first loaded into the R working environment. Then, sampling locations were extracted from the .csv file of PM2.5, and converted into a spatial object.
 ```{r fig.align='center'}
 # read in cbsa shapefile
 nycbsa <- st_read("data/ny_cbsa.shp")
@@ -77,7 +84,7 @@ epa_sites <- df_winter %>%
 ```
 
 ## Explore Metropolitan Area & Air Pollution Monitoring Sites
-The monitoring site that falls outside the metro area boundary and will be removed from the analysis
+This chunk of code visualizes the sampling locations and the overarching area of interest. Monitoring site that falls outside the CBSA boundary will be removed from the analysis.
 ```{r warning = FALSE, message = FALSE, fig.align='center'}
 tmap_mode("view")
 
@@ -89,7 +96,7 @@ tm_shape(nycbsa, name = "NY Metropolitan Area", is.master = TRUE) +
 ```
 
 ## Rasterize
-Rasterize the nycbsa shapefile for interpolation surface
+The NYCBSA data object is currently in the form of a vector file, but needs to be converted into a raster image to create an interpolation surface. This code chunk uses the `rasterize` function from the `raster` library for this conversion.
 ```{r fig.align='center', fig.height=4, fig.width=4}
 # create a raster file with resolution of 0.01 for ny metro area
 target <- raster(x = extent(nycbsa), crs = crs(nycbsa), res = 0.01)
@@ -103,7 +110,8 @@ plot(nycbsar, axes = FALSE, box = FALSE, legend = FALSE)
 ```
 
 ## Interpolation
-```{r, warning = FALSE, message = FALSE}
+Perform a few more preprocessing steps to ready the dataset for analysis, and then use the `gstat` function to perform an inverse distance weighting (IDW) interpolation.
+```{r warning = FALSE, message = FALSE, echo=FALSE}
 # assign year to winter months
 # if jan-march, assign to previous year, else assign same year
 df_winter$winter <- ifelse(format(df_winter$Date, "%m") == "12",
@@ -142,7 +150,7 @@ for (each_year in years){
 }
 ```
 
-# Plotting Interpolated Layer 
+# Plotting the Interpolated Layer 
 ```{r warning = FALSE, message = FALSE, fig.align='center'}
 # create a stack for all interpolated layers for plotting
 s <- raster::stack(invdist.list)
@@ -175,8 +183,9 @@ for (i in 1:length(s@layers)){
 ```
 
 # Histogram
+Histograms are a great way to view how PM2.5 measurements change year-to-year within the study area. Each bar represents a sampling location and the amount of PM2.5 measured there.
 ```{r fig.align='center'}
-# raster stack to df for each x, y
+# raster stack to dataframe for each x, y
 # remove NA values
 stack_df <- as.data.frame(s, xy = TRUE, na.rm = TRUE)%>%
   melt(id.vars = c('x','y'))
@@ -188,7 +197,8 @@ ggplot(stack_df) +
     facet_wrap(~variable)
 ```
 
-# Mann-Kendall Trend Test
+# Mann-Kendall Trend Test: Tau & P-Value 
+A Mann-Kendall model is a non=parametric test similar to a pearson correlation analysis. Ranging from +1 to -1, a positive tau value indicates an increasing trend while a negative tau value indicates a decreasing trend. The higher the absolute tau value, the more consistent that trend is. This helps us answer the question, "where are PM2.5 measurements falling, and where are they rising?"
 ```{r message=FALSE, warning=FALSE, include=FALSE, results="hide"}
 # function for Mann-Kendall trend test
 kendall = function(x){return(unlist(MannKendall(x)))}
@@ -197,7 +207,6 @@ kendall = function(x){return(unlist(MannKendall(x)))}
 kendall_output = calc(s,kendall)
 ```
 
-# Kendall's tau & p-value 
 ```{r fig.align='center'}
 # plot Kendall's tau statistic
 plot(kendall_output$tau, main = "Kendall's tau statistic")
@@ -211,6 +220,7 @@ writeRaster(kendall_output$sl, filename ="mk_p-value.rst", overwrite=TRUE)
 ```
 
 # TerrSet Validation: Kendall Tau & P-Value
+To ensure R is returning the values we expect (and that the package was not poorly written, or that there was some methodological flaw), it is good to compare results with those in software you may be more familiar with, such as TerrSet. After performing a Mann-Kendall test in the TerrSet Earth Trends Modeler, we have found the results between these two programs to be virtually identical.
 ```{r fig.align='center'}
 ktau_img <- load.image("terrset/TERRSET_MK_TAU.BMP")
 plot(ktau_img)
@@ -225,9 +235,11 @@ plot(mkp_img)
 ```
 
 # Theil-Sen Median Trend Test
+Knowing simply whether trends are increasing or decreasing is not necessarily enough. It is also useful to know the matgnitude, or rate at which trends are increasing. The Theil-Sen median trend analysis returns a slope for each pixel, which can tell us rates of change in our time series.
 ```{r fig.align='center', eval=FALSE}
 
-#saves two images automatically to working directory: pvalue, and slope of theil-sen
+# saves two images automatically to working directory: pvalue, and slope of theil-sen.
+# Note that this function takes about 10 minutes of processing time to complete.
 eco.theilsen(s, dates = c(seq(from = 2009, by = 1, to = 2019)))
 file.rename(from = "pvalue.tif", to = "theilsen_pvalue.tif")
 file.rename(from = "slope.tif", to = "theilsen_slope.tif")
@@ -243,14 +255,13 @@ writeRaster(theilsen_slope, filename = "theilsen_slope.rst", overwrite=T)
 
 
 #TerrSet Validation: Theil-Sen Median Trend
+Similarly, we can validate our results in TerrSet, and we found the results from these two programs to be identical.
 ```{r fig.align='center'}
 
 theilsen_slope_img <- load.image("terrset/TERRSET_THEILSEN_SLOPE.BMP")
 plot(theilsen_slope_img)
 
 ```
-
-
 
 
 
