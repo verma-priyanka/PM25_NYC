@@ -199,14 +199,34 @@ ggplot(stack_df) +
 
 # Mann-Kendall Trend Test: Tau & P-Value 
 A Mann-Kendall model is a non=parametric test similar to a pearson correlation analysis. Ranging from +1 to -1, a positive tau value indicates an increasing trend while a negative tau value indicates a decreasing trend. The higher the absolute tau value, the more consistent that trend is. This helps us answer the question, "where are PM2.5 measurements falling, and where are they rising?"
-```{r message=FALSE, warning=FALSE, include=FALSE, results="hide"}
+```{r message=FALSE, warning=FALSE, include=FALSE, results="hide", eval=FALSE}
 # function for Mann-Kendall trend test
 kendall = function(x){return(unlist(MannKendall(x)))}
 # apply function to raster stack. RUN THIS CHUNK IN CONSOLE ONLY- takes too long in markdown
-# ...and ignore "WARNING: Error exit, tauk2. IFAULT =  10" warning. Output has been validated in TerrSet, and this message appears to be a bug in the package.
+# ...and ignore "WARNING: Error exit, tauk2. IFAULT =  10" warning. Output has been validated in TerrSet, and this message appears to be a bug in the package. For simplicity, an R object (.rds file) has been saved to the working directory, which contains the output for the Mann-Kendall model.
 kendall_output = calc(s,kendall)
+
+# Save output to a .rds file
+#saveRDS(kendall_output, file = "kendall_output.rds")
+
 ```
 
+Because of some bugs running the above code chunk in an R-Markdown file, we recommend running the above chunk in the R console specifically. If you continue to have trouble running the aabove code (e.g, the code infinitely runs without stopping after a few minutes), we have provided the output for you as a .rds file which can be easily read into RStudio. 
+
+These file types are useful in R; they can be read in directly into your global environment using the same data structure it was created in, without running any further conversions or data processing steps, saving time and preventing potential bugs in your code. To save this file, we have have used the `saveRDS()` function seen above. If you are familiar with Python programming, `saveRDS()` is analogous to `pickle.dump()` from the `pickle` Python package. 
+
+In any respect, we recommend trying to run the code from the above chunk first. If you have trouble using that code, you can instead load in the provided file using this code here:
+```{r}
+kendall_output <- readRDS("kendall_output.rds")
+
+```
+
+
+# Plotting Mann-Kendall Output and saving to .RST
+
+The `levelplot()` function for raster images can be considered to be an upgrade to the generic `plot()` function. It provides enhanced functionality and better visualizations.
+
+Notice that the `kendall_output` data structure is that of a RasterBrick. RasterBricks are similar to RasterStacks. In both, you can store multiple raster images within the object, allowing for easier file organization and analysis. To access raster images within a brick, type the name of the object, followed by a dollar sign and the name of the raster you are searching for.
 ```{r fig.align='center'}
 # plot Kendall's tau statistic
 levelplot(kendall_output$tau, main = "Kendall's tau statistic")
@@ -218,19 +238,21 @@ writeRaster(kendall_output$tau, filename = "tau.rst", overwrite=TRUE)
 writeRaster(kendall_output$sl, filename ="mk_p-value.rst", overwrite=TRUE)
 
 ```
+You may notice from these plots that at approximately 40.5N, 74.7W PM2.5 tends to increase consistently over the 10-year time frame, while other area see more consistently downward trends. Remember, however, that these estimates are very dependent on the interpolation method used. IDW was chosen for its simplicity for this tutorial, though other methods may yield more accurate results.
+
 
 # TerrSet Validation: Kendall Tau & P-Value
 To ensure R is returning the values we expect (and that the package was not poorly written, or that there was some methodological flaw), it is good to compare results with those in software you may be more familiar with, such as TerrSet. After performing a Mann-Kendall test in the TerrSet Earth Trends Modeler, we have found the results between these two programs to be virtually identical.
 ```{r fig.align='center'}
 ktau_img <- load.image("terrset/TERRSET_MK_TAU.BMP")
-plot(ktau_img)
+plot(ktau_img, axes = F)
 
 ```
 
 ```{r fig.align='center'}
 
 mkp_img <- load.image("terrset/TERRSET_MK_P.BMP")
-plot(mkp_img)
+plot(mkp_img, axes = F)
 
 ```
 
@@ -239,16 +261,18 @@ Knowing simply whether trends are increasing or decreasing is not necessarily en
 ```{r fig.align='center', eval=FALSE}
 
 # saves two images automatically to working directory: pvalue, and slope of theil-sen.
-# Note that this function takes about 10 minutes of processing time to complete.
+# Note that this function takes at least 10 minutes of processing time to complete, so be prepared to wait.
 eco.theilsen(s, dates = c(seq(from = 2009, by = 1, to = 2019)))
 file.rename(from = "pvalue.tif", to = "theilsen_pvalue.tif")
 file.rename(from = "slope.tif", to = "theilsen_slope.tif")
 
 ```
 
+
+A Theil-Sen median trend image shows us the slope, or rate of change in a time series analysis. You can see that there is a positive rate of change located at approximately 40.5N, 74.7W, with negative rates of change elsewhere.
 ```{r fig.align = 'center'}
 theilsen_slope <- raster("theilsen_slope.tif")
-levelplot(theilsen_slope)
+plot(theilsen_slope, main = "Theil-Sen Median Slope")
 
 # write slope image to IDRISI raster format for easy comparison
 writeRaster(theilsen_slope, filename = "theilsen_slope.rst", overwrite=T)
