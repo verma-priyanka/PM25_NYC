@@ -96,7 +96,7 @@ tm_shape(nycbsa, name = "NY Metropolitan Area", is.master = TRUE) +
 ```
 
 ## Rasterize
-The NYCBSA data object is currently in the form of a vector file, but needs to be converted into a raster image to create an interpolation surface. This code chunk uses the `rasterize` function from the `raster` library for this conversion.
+The NYCBSA data object is currently in the form of a vector file, but needs to be converted into a raster image to create an interpolation surface. This code chunk uses the `rasterize` function from the `raster` library for this conversion, and then plots our area of interest.
 ```{r fig.align='center', fig.height=4, fig.width=4}
 # create a raster file with resolution of 0.01 for ny metro area
 target <- raster(x = extent(nycbsa), crs = crs(nycbsa), res = 0.01)
@@ -170,20 +170,8 @@ for (i in 1:length(s@layers)){
 }
 ```
 
-```{r}
-# # Interactive map for interpolated layers
-# # The legend is currently messed up
-
-# tmap_mode("view")
-# tm_shape(s) +
-#   tm_raster(palette = "-magma", alpha = 0.5)+
-#   tm_facets(as.layers = TRUE) +
-#   tm_layout(title = "NY Metropolitan Area PM2.5 Mean", 
-#             legend.outside.position = "left", legend.outside = TRUE)
-```
-
 # Histogram
-Histograms are a great way to view how PM2.5 measurements change year-to-year within the study area. Each bar represents a sampling location and the amount of PM2.5 measured there.
+Histograms are a great way to view how PM2.5 measurements change year-to-year within the study area. Each bar represents a sampling location and the amount of PM2.5 measured there. You can see some sampling locations with increasing PM2.5 values over the 10-year time span, while others have decreasing PM2.5 values. 
 ```{r fig.align='center'}
 # raster stack to dataframe for each x, y
 # remove NA values
