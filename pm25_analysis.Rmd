@@ -111,7 +111,7 @@ plot(nycbsar, axes = FALSE, box = FALSE, legend = FALSE)
 
 ## Interpolation
 Perform a few more preprocessing steps to ready the dataset for analysis, and then use the `gstat` function to perform an inverse distance weighting (IDW) interpolation.
-```{r message=FALSE, warning=FALSE, include=FALSE}
+```{r message=FALSE, warning=FALSE}
 # assign year to winter months
 # if jan-march, assign to previous year, else assign same year
 df_winter$winter <- ifelse(format(df_winter$Date, "%m") == "12",
