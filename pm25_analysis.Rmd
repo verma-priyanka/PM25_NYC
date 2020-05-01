@@ -3,10 +3,10 @@ title: "Advanced Raster Final Project <br> Monitoring Trends in PM2.5 in NYC"
 author: "Jordan Frey, Priyanka Verma"
 date: "`r Sys.Date()`"
 output:
-  prettydoc::html_pretty:
+  pdf_document: default
   theme: architect
   html_document: default
-  pdf_document: default
+  prettydoc::html_pretty:
 ---
 
 ```{r setup, include=FALSE}
@@ -186,7 +186,7 @@ ggplot(stack_df) +
 ```
 
 # Mann-Kendall Trend Test: Tau & P-Value 
-A Mann-Kendall model is a non=parametric test similar to a pearson correlation analysis. Ranging from +1 to -1, a positive tau value indicates an increasing trend while a negative tau value indicates a decreasing trend. The higher the absolute tau value, the more consistent that trend is. This helps us answer the question, "where are PM2.5 measurements falling, and where are they rising?"
+A Mann-Kendall model is a non-parametric test similar to a pearson correlation analysis. Ranging from +1 to -1, a positive tau value indicates an increasing trend while a negative tau value indicates a decreasing trend. The higher the absolute tau value, the more consistent that trend is. This helps us answer the question, "where are PM2.5 measurements falling, and where are they rising?"
 ```{r message=FALSE, warning=FALSE, include=FALSE, results="hide", eval=FALSE}
 # function for Mann-Kendall trend test
 kendall = function(x){return(unlist(MannKendall(x)))}
