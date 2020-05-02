@@ -1,19 +1,17 @@
 ---
-title: "Advanced Raster Final Project <br> Monitoring Trends in PM2.5 in NYC"
+title: "Advanced Raster Final Project <br> R Tutorial: Geospatial Time Series Analysis"
 author: "Jordan Frey, Priyanka Verma"
 date: "`r Sys.Date()`"
 output:
-  pdf_document: default
-  theme: architect
-  html_document: default
   prettydoc::html_pretty:
+    theme: cayman
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# R Tutorial: Geospatial Time Series Analysis
+# Monitoring Trends in PM2.5 in NYC Using R
 
 
 ## Introduction
@@ -34,22 +32,22 @@ The CBSA boundary shapefile can be obtained from the United States Census Bureau
 
 To begin the analysis, first load the packages we will be using for this project. Please type in `install.packages("PACKAGE_NAME_HERE")` for each package you do not already have locally installed (all those used in this project are listed below). Then, run the code chunk below:
 ```{r warning=FALSE, include=TRUE, message=FALSE}
-library(sf) # sf (simple features) offers an exceptional data structure for storing GIS vector data
-library(tidyverse) # The tidyverse is a compilation of packages curated to make data cleaning easy
-library(raster) # provides a data structure for storing raster data and provides preprocessing functions
+library(sf) # offers an exceptional data structure for storing GIS vector data
+library(tidyverse) # compilation of packages curated to make data cleaning easy
+library(raster) # data structure for storing raster data and preprocessing functions
 library(gstat) # package for interpolating data
-library(lubridate) # provides extra functionality for working with dates and times in data
+library(lubridate) # provides functionality for working with dates and times
 library(plyr) # provides extra data cleaning functions
-library(tmap) # provides interactive visualization functionality for geospatial data
+library(tmap) # interactive visualization functionality for geospatial data
 library(rasterVis) # provides enhanced plotting functions for raster data
-library(RColorBrewer) # provides enhanced and customized palettes for visualizing data
+library(RColorBrewer) # enhanced and customized palettes for visualizing data
 library(reshape) # provides extra functionality for data cleaning
 library(Kendall) # provides acccess to Mann-Kendall modeling
 library(EcoGenetics) # provides access to Theil-Sen modeling
-library(imager) # allows for easy plotting of non-spatial image files, like .BMP or .PNG
+library(imager) # easy plotting of non-spatial image files, like .BMP or .PNG
 ```
 
-## Data Pre-processing
+## Data Pre-Processing
 The raw data used in this analysis spans a 10-year period, from January 1st, 2010 to April 12th, 2020. Air quality data was sampled at each location at least once every few days, making it a near-daily data set. To focus on the yearly winter season, the data was filtered based on the December - March months. The mean PM2.5 value was obtained for each time index (season). Users of this tutorial are encouraged to test view the output of each intermediate step to better understand how the workflow operates
 
 ```{r warning = FALSE, message = FALSE}
@@ -150,7 +148,7 @@ for (each_year in years){
 }
 ```
 
-# Plotting the Interpolated Layer 
+## Plotting the Interpolated Layer 
 ```{r warning = FALSE, message = FALSE, fig.align='center'}
 # create a stack for all interpolated layers for plotting
 s <- raster::stack(invdist.list)
@@ -162,7 +160,7 @@ mapTheme <- rasterTheme(region=brewer.pal(8,"Blues"), rev=TRUE)
 levelplot(s, pretty = TRUE,  main="NY Metropolitan Area PM2.5 Mean", par.settings=mapTheme)
 ```
 
-# Saving Interpolated Raster Images as .RST
+## Saving Interpolated Raster Images as .RST
 ```{r warning = FALSE, message = FALSE, fig.align='center', eval=FALSE}
 for (i in 1:length(s@layers)){
   writeRaster(s[[i]], filename = paste0("terrset/", names(s[[i]]), ".rst"),
@@ -170,7 +168,7 @@ for (i in 1:length(s@layers)){
 }
 ```
 
-# Histogram
+## Histogram
 Histograms are a great way to view how PM2.5 measurements change year-to-year within the study area. Each bar represents a sampling location and the amount of PM2.5 measured there. You can see some sampling locations with increasing PM2.5 values over the 10-year time span, while others have decreasing PM2.5 values. 
 ```{r fig.align='center'}
 # raster stack to dataframe for each x, y
@@ -185,13 +183,16 @@ ggplot(stack_df) +
     facet_wrap(~variable)
 ```
 
-# Mann-Kendall Trend Test: Tau & P-Value 
+## Mann-Kendall Trend Test: Tau & P-Value 
 A Mann-Kendall model is a non-parametric test similar to a pearson correlation analysis. Ranging from +1 to -1, a positive tau value indicates an increasing trend while a negative tau value indicates a decreasing trend. The higher the absolute tau value, the more consistent that trend is. This helps us answer the question, "where are PM2.5 measurements falling, and where are they rising?"
-```{r message=FALSE, warning=FALSE, include=FALSE, results="hide", eval=FALSE}
+```{r message=FALSE, warning=FALSE, results="hide", eval=FALSE}
 # function for Mann-Kendall trend test
 kendall = function(x){return(unlist(MannKendall(x)))}
-# apply function to raster stack. RUN THIS CHUNK IN CONSOLE ONLY- takes too long in markdown
-# ...and ignore "WARNING: Error exit, tauk2. IFAULT =  10" warning. Output has been validated in TerrSet, and this message appears to be a bug in the package. For simplicity, an R object (.rds file) has been saved to the working directory, which contains the output for the Mann-Kendall model.
+# apply function to raster stack. RUN THIS CHUNK IN CONSOLE ONLY
+# takes too long in markdown and ignore "WARNING: Error exit, tauk2. IFAULT =  
+# 10" warning. Output has been validated in TerrSet, and this message appears 
+# to be a bug in the package. For simplicity, an R object (.rds file) has been 
+# saved to the working directory, which contains the output for the Mann-Kendall
 kendall_output = calc(s,kendall)
 
 # Save output to a .rds file
@@ -199,18 +200,17 @@ kendall_output = calc(s,kendall)
 
 ```
 
-Because of some bugs running the above code chunk in an R-Markdown file, we recommend running the above chunk in the R console specifically. If you continue to have trouble running the aabove code (e.g, the code infinitely runs without stopping after a few minutes), we have provided the output for you as a .rds file which can be easily read into RStudio. 
+Because of some bugs running the above code chunk in an R-Markdown file, we recommend running the above chunk in the R console specifically. If you continue to have trouble running the above code (e.g, the code infinitely runs without stopping after a few minutes), we have provided the output for you as a .rds file which can be easily read into RStudio. 
 
 These file types are useful in R; they can be read in directly into your global environment using the same data structure it was created in, without running any further conversions or data processing steps, saving time and preventing potential bugs in your code. To save this file, we have have used the `saveRDS()` function seen above. If you are familiar with Python programming, `saveRDS()` is analogous to `pickle.dump()` from the `pickle` Python package. 
 
 In any respect, we recommend trying to run the code from the above chunk first. If you have trouble using that code, you can instead load in the provided file using this code here:
 ```{r}
-kendall_output <- readRDS("kendall_output.rds")
-
+kendall_output <- readRDS("output/kendall_output.rds")
 ```
 
 
-# Plotting Mann-Kendall Output and saving to .RST
+## Plotting Mann-Kendall Output and saving to .RST
 
 The `levelplot()` function for raster images can be considered to be an upgrade to the generic `plot()` function. It provides enhanced functionality and better visualizations.
 
@@ -222,14 +222,14 @@ levelplot(kendall_output$tau, main = "Kendall's tau statistic")
 levelplot(kendall_output$sl, main = "p-value")
 
 # write to rst
-writeRaster(kendall_output$tau, filename = "tau.rst", overwrite=TRUE)
-writeRaster(kendall_output$sl, filename ="mk_p-value.rst", overwrite=TRUE)
+writeRaster(kendall_output$tau, filename = "output/tau.rst", overwrite=TRUE)
+writeRaster(kendall_output$sl, filename ="output/mk_p-value.rst", overwrite=TRUE)
 
 ```
 You may notice from these plots that at approximately 40.5N, 74.7W PM2.5 tends to increase consistently over the 10-year time frame, while other area see more consistently downward trends. Remember, however, that these estimates are very dependent on the interpolation method used. IDW was chosen for its simplicity for this tutorial, though other methods may yield more accurate results.
 
 
-# TerrSet Validation: Kendall Tau & P-Value
+## TerrSet Validation: Kendall Tau & P-Value
 To ensure R is returning the values we expect (and that the package was not poorly written, or that there was some methodological flaw), it is good to compare results with those in software you may be more familiar with, such as TerrSet. After performing a Mann-Kendall test in the TerrSet Earth Trends Modeler, we have found the results between these two programs to be virtually identical.
 ```{r fig.align='center'}
 ktau_img <- load.image("terrset/TERRSET_MK_TAU.BMP")
@@ -244,12 +244,14 @@ plot(mkp_img, axes = F)
 
 ```
 
-# Theil-Sen Median Trend Test
+## Theil-Sen Median Trend Test
 Knowing simply whether trends are increasing or decreasing is not necessarily enough. It is also useful to know the matgnitude, or rate at which trends are increasing. The Theil-Sen median trend analysis returns a slope for each pixel, which can tell us rates of change in our time series.
 ```{r fig.align='center', eval=FALSE}
 
-# saves two images automatically to working directory: pvalue, and slope of theil-sen.
-# Note that this function takes at least 10 minutes of processing time to complete, so be prepared to wait.
+# saves two images automatically to working directory: 
+# pvalue, and slope of theil-sen.
+# Note that this function takes at least 10 minutes of processing time 
+# to complete, so be prepared to wait.
 eco.theilsen(s, dates = c(seq(from = 2009, by = 1, to = 2019)))
 file.rename(from = "pvalue.tif", to = "theilsen_pvalue.tif")
 file.rename(from = "slope.tif", to = "theilsen_slope.tif")
@@ -259,21 +261,19 @@ file.rename(from = "slope.tif", to = "theilsen_slope.tif")
 
 A Theil-Sen median trend image shows us the slope, or rate of change in a time series analysis. You can see that there is a positive rate of change located at approximately 40.5N, 74.7W, with negative rates of change elsewhere.
 ```{r fig.align = 'center'}
-theilsen_slope <- raster("theilsen_slope.tif")
-plot(theilsen_slope, main = "Theil-Sen Median Slope")
+theilsen_slope <- raster("output/theilsen_slope.tif")
+plot(theilsen_slope, main = "output/Theil-Sen Median Slope")
 
 # write slope image to IDRISI raster format for easy comparison
-writeRaster(theilsen_slope, filename = "theilsen_slope.rst", overwrite=T)
+writeRaster(theilsen_slope, filename = "output/theilsen_slope.rst", overwrite=T)
 ```
 
 
-#TerrSet Validation: Theil-Sen Median Trend
+## TerrSet Validation: Theil-Sen Median Trend
 Similarly, we can validate our results in TerrSet, and we found the results from these two programs to be identical.
 ```{r fig.align='center'}
-
 theilsen_slope_img <- load.image("terrset/TERRSET_THEILSEN_SLOPE.BMP")
 plot(theilsen_slope_img)
-
 ```
 
 
